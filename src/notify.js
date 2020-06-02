@@ -42,11 +42,8 @@ const getMessage = () => {
 
     const runUrl = `${context.payload.repository?.html_url}/actions/runs/${process.env.GITHUB_RUN_ID}`;
 
-    console.log(context.repo);
-    console.log(context.payload.pull_request);
-    console.log(context.payload.repository);
-
-    return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${context.payload.repo?.compare_url}|${context.sha}>) for PR <${pr.url}| #${pr.number} ${pr.title}>`;
+    // prettier-ignore
+    return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${context.payload.repository?.compare_url}|${context.sha.substring(0, 7)}>) for PR <${pr.url}| #${pr.number} ${pr.title}>`;
   }
 };
 
