@@ -1,5 +1,5 @@
-const got = require('got').default;
-const { context } = require('@actions/github');
+import got from 'got';
+import { context } from '@actions/github';
 
 /**
  * @typedef {('success' | 'failure' | 'cancelled')} JobStatus
@@ -40,10 +40,11 @@ const getMessage = () => {
       url: context.payload.pull_request?.html_url,
     };
 
-    const runId = process.env.GITHUB_RUN_ID;
-    const runUrl = `${context.payload.repository?.html_url}/actions/runs/${runId}`;
+    const runUrl = `${context.payload.repository?.html_url}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+    const compareUrl = `${context.payload.repository?.html_url}/compare/${context.payload.pull_request?.head.ref}`;
 
-    return `Workflow <${runUrl}|#${runId}> for PR <${pr.url}| #${pr.number} ${pr.title}>`;
+    // prettier-ignore
+    return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${compareUrl}|${context.sha.substring(0, 7)}>) for PR <${pr.url}| #${pr.number} ${pr.title}>`;
   }
 };
 
@@ -70,14 +71,14 @@ const notify = async (status, url) => {
         ts: new Date(context.payload.repository?.pushed_at)
           .getTime()
           .toString(),
-        text: `${getMessage()} ${jobParameters(status).text}}`,
+        text: `${getMessage()} ${jobParameters(status).text}`,
       },
     ],
   };
 
-  await got(url, {
+  await got.post(url, {
     body: JSON.stringify(payload),
   });
 };
 
-module.exports = notify;
+export default notify;
