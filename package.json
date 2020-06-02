@@ -1,7 +1,7 @@
 {
   "name": "slack-github-action",
   "version": "1.0.0",
-  "source": "src/index.js",
+  "source": "src/index.ts",
   "main": "dist/index.js",
   "repository": "https://github.com/iRoachie/slack-github-action.git",
   "author": "Kyle Roach <kroach.work@gmail.com>",

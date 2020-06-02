@@ -1,5 +1,5 @@
 import core from '@actions/core';
-import notify from './notify';
+import notify, { JobStatus } from './notify';
 
 async function run() {
   try {
@@ -15,8 +15,7 @@ async function run() {
       throw new Error('Unknown job status passed in.');
     }
 
-    // @ts-ignore
-    await notify(jobStatus, url);
+    await notify(jobStatus as JobStatus, url);
   } catch (error) {
     core.setFailed(error.message);
     core.debug(error.stack);

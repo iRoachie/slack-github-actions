@@ -1,16 +1,12 @@
 import got from 'got';
 import { context } from '@actions/github';
 
-/**
- * @typedef {('success' | 'failure' | 'cancelled')} JobStatus
- */
+export type JobStatus = 'success' | 'failure' | 'cancelled';
 
 /**
  * Returns parameters depending on the status of the workflow
- *
- * @param {JobStatus} status
  */
-const jobParameters = (status) => {
+const jobParameters = (status: JobStatus) => {
   return {
     success: {
       color: 'good',
@@ -50,11 +46,8 @@ const getMessage = () => {
 
 /**
  * Sends message via slack
- *
- * @param {JobStatus} status - Status of the job
- * @param {string} url - Slack url
  */
-const notify = async (status, url) => {
+const notify = async (status: JobStatus, url: string) => {
   const repository = context.payload.repository;
   const sender = context.payload.sender;
 
