@@ -21629,9 +21629,8 @@ const getMessage = () => {
       number: (_context$payload$pull2 = github_1.payload.pull_request) == null ? void 0 : _context$payload$pull2.number,
       url: (_context$payload$pull3 = github_1.payload.pull_request) == null ? void 0 : _context$payload$pull3.html_url
     };
-    const runId = process.env.GITHUB_RUN_ID;
-    const runUrl = `${(_context$payload$repo = github_1.payload.repository) == null ? void 0 : _context$payload$repo.html_url}/actions/runs/${runId}`;
-    return `Workflow <${runUrl}|#${runId}> for PR <${pr.url}| #${pr.number} ${pr.title}>`;
+    const runUrl = `${(_context$payload$repo = github_1.payload.repository) == null ? void 0 : _context$payload$repo.html_url}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+    return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> for PR <${pr.url}| #${pr.number} ${pr.title}>`;
   }
 };
 

@@ -40,10 +40,9 @@ const getMessage = () => {
       url: context.payload.pull_request?.html_url,
     };
 
-    const runId = process.env.GITHUB_RUN_ID;
-    const runUrl = `${context.payload.repository?.html_url}/actions/runs/${runId}`;
+    const runUrl = `${context.payload.repository?.html_url}/actions/runs/${process.env.GITHUB_RUN_ID}`;
 
-    return `Workflow <${runUrl}|#${runId}> for PR <${pr.url}| #${pr.number} ${pr.title}>`;
+    return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> for PR <${pr.url}| #${pr.number} ${pr.title}>`;
   }
 };
 
