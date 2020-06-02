@@ -1,0 +1,9 @@
+{
+  "extends": "satya164",
+  "env": {
+    "node": true
+  },
+  "rules": {
+    "import/no-commonjs": "off"
+  }
+}

@@ -1,0 +1,10 @@
+name: Slack Github Actions
+description: A no-config GitHub action that notifies slack of the status of your GitHub actions
+inputs:
+  status:
+    description: Status of the workflow
+    required: true
+    default: Success
+  runs:
+    using: node12
+    main: src/index.js
