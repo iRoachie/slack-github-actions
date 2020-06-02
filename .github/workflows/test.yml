@@ -12,6 +12,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - run: nodemon
+
       - name: Test Output
         uses: ./ # Uses an action in the root directory
         env:
