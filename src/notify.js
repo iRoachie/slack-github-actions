@@ -75,7 +75,7 @@ const notify = async (status, url) => {
     ],
   };
 
-  await got(url, {
+  await got.post(url, {
     body: JSON.stringify(payload),
   });
 };

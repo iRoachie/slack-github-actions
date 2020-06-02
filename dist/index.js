@@ -21654,7 +21654,7 @@ const notify = function (status, url) {
         text: `${getMessage()} ${jobParameters(status).text}}`
       }]
     };
-    return Promise.resolve(got(url, {
+    return Promise.resolve(got.post(url, {
       body: JSON.stringify(payload)
     })).then(function () {});
   } catch (e) {
