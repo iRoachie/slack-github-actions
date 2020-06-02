@@ -5,6 +5,6 @@ inputs:
     description: Status of the workflow
     required: true
     default: Success
-  runs:
-    using: node12
-    main: src/index.js
+runs:
+  using: node12
+  main: src/index.js
