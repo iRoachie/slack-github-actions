@@ -21651,7 +21651,7 @@ const notify = function (status, url) {
         footer_icon: 'https://github.githubassets.com/favicon.ico',
         mrkdwn_in: ['text'],
         ts: new Date((_context$payload$repo2 = github_1.payload.repository) == null ? void 0 : _context$payload$repo2.pushed_at).getTime().toString(),
-        text: `${getMessage()} ${jobParameters(status).text}}`
+        text: `${getMessage()} ${jobParameters(status).text}`
       }]
     };
     return Promise.resolve(got.post(url, {

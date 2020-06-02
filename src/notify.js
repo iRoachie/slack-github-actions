@@ -70,7 +70,7 @@ const notify = async (status, url) => {
         ts: new Date(context.payload.repository?.pushed_at)
           .getTime()
           .toString(),
-        text: `${getMessage()} ${jobParameters(status).text}}`,
+        text: `${getMessage()} ${jobParameters(status).text}`,
       },
     ],
   };
