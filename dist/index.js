@@ -21630,7 +21630,8 @@ const getMessage = () => {
       url: (_context$payload$pull3 = github_1.payload.pull_request) == null ? void 0 : _context$payload$pull3.html_url
     };
     const runUrl = `${(_context$payload$repo = github_1.payload.repository) == null ? void 0 : _context$payload$repo.html_url}/actions/runs/${process.env.GITHUB_RUN_ID}`;
-    return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${(_context$payload$repo2 = github_1.payload.repository) == null ? void 0 : _context$payload$repo2.compare_url}|${github_1.sha.substring(0, 7)}>) for PR <${pr.url}| #${pr.number} ${pr.title}>`;
+    const compareUrl = `${(_context$payload$repo2 = github_1.payload.repository) == null ? void 0 : _context$payload$repo2.html_url}/compare/${github_1.ref}`;
+    return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${compareUrl}|${github_1.sha.substring(0, 7)}>) for PR <${pr.url}| #${pr.number} ${pr.title}>`;
   }
 };
 
