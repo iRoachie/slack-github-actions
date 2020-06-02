@@ -21622,7 +21622,7 @@ const getMessage = () => {
   const eventName = github_1.eventName;
 
   if (eventName === 'pull_request') {
-    var _context$payload$pull, _context$payload$pull2, _context$payload$pull3, _context$payload$repo;
+    var _context$payload$pull, _context$payload$pull2, _context$payload$pull3, _context$payload$repo, _context$payload$pull4;
 
     const pr = {
       title: (_context$payload$pull = github_1.payload.pull_request) == null ? void 0 : _context$payload$pull.title,
@@ -21630,7 +21630,7 @@ const getMessage = () => {
       url: (_context$payload$pull3 = github_1.payload.pull_request) == null ? void 0 : _context$payload$pull3.html_url
     };
     const runUrl = `${(_context$payload$repo = github_1.payload.repository) == null ? void 0 : _context$payload$repo.html_url}/actions/runs/${process.env.GITHUB_RUN_ID}`;
-    return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> for PR <${pr.url}| #${pr.number} ${pr.title}>`;
+    return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${(_context$payload$pull4 = github_1.payload.pull_request) == null ? void 0 : _context$payload$pull4.repo.compare_url}|${github_1.sha}>) for PR <${pr.url}| #${pr.number} ${pr.title}>`;
   }
 };
 
