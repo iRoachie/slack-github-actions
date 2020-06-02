@@ -1,5 +1,5 @@
-const got = require('got').default;
-const { context } = require('@actions/github');
+import got from 'got';
+import { context } from '@actions/github';
 
 /**
  * @typedef {('success' | 'failure' | 'cancelled')} JobStatus
@@ -80,4 +80,4 @@ const notify = async (status, url) => {
   });
 };
 
-module.exports = notify;
+export default notify;

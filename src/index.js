@@ -1,5 +1,5 @@
-const core = require('@actions/core');
-const notify = require('./notify');
+import core from '@actions/core';
+import notify from './notify';
 
 async function run() {
   try {
