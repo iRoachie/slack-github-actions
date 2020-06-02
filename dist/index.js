@@ -21622,7 +21622,7 @@ const getMessage = () => {
   const eventName = github_1.eventName;
 
   if (eventName === 'pull_request') {
-    var _context$payload$pull, _context$payload$pull2, _context$payload$pull3, _context$payload$repo, _context$payload$pull4;
+    var _context$payload$pull, _context$payload$pull2, _context$payload$pull3, _context$payload$repo, _context$payload$repo2;
 
     const pr = {
       title: (_context$payload$pull = github_1.payload.pull_request) == null ? void 0 : _context$payload$pull.title,
@@ -21630,13 +21630,13 @@ const getMessage = () => {
       url: (_context$payload$pull3 = github_1.payload.pull_request) == null ? void 0 : _context$payload$pull3.html_url
     };
     const runUrl = `${(_context$payload$repo = github_1.payload.repository) == null ? void 0 : _context$payload$repo.html_url}/actions/runs/${process.env.GITHUB_RUN_ID}`;
-    return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${(_context$payload$pull4 = github_1.payload.pull_request) == null ? void 0 : _context$payload$pull4.repo.compare_url}|${github_1.sha}>) for PR <${pr.url}| #${pr.number} ${pr.title}>`;
+    return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${(_context$payload$repo2 = github_1.payload.repo) == null ? void 0 : _context$payload$repo2.compare_url}|${github_1.sha}>) for PR <${pr.url}| #${pr.number} ${pr.title}>`;
   }
 };
 
 const notify = function (status, url) {
   try {
-    var _context$payload$repo2;
+    var _context$payload$repo3;
 
     const repository = github_1.payload.repository;
     const sender = github_1.payload.sender;
@@ -21649,7 +21649,7 @@ const notify = function (status, url) {
         footer: `<${repository == null ? void 0 : repository.html_url}|${repository == null ? void 0 : repository.full_name}>`,
         footer_icon: 'https://github.githubassets.com/favicon.ico',
         mrkdwn_in: ['text'],
-        ts: new Date((_context$payload$repo2 = github_1.payload.repository) == null ? void 0 : _context$payload$repo2.pushed_at).getTime().toString(),
+        ts: new Date((_context$payload$repo3 = github_1.payload.repository) == null ? void 0 : _context$payload$repo3.pushed_at).getTime().toString(),
         text: `${getMessage()} ${jobParameters(status).text}`
       }]
     };

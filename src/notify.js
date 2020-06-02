@@ -42,7 +42,7 @@ const getMessage = () => {
 
     const runUrl = `${context.payload.repository?.html_url}/actions/runs/${process.env.GITHUB_RUN_ID}`;
 
-    return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${context.payload.pull_request?.repo.compare_url}|${context.sha}>) for PR <${pr.url}| #${pr.number} ${pr.title}>`;
+    return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${context.payload.repo?.compare_url}|${context.sha}>) for PR <${pr.url}| #${pr.number} ${pr.title}>`;
   }
 };
 
