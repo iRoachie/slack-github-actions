@@ -6,6 +6,9 @@ on:
       - master
   release:
     types: [released, prereleased]
+  push:
+    tags:
+      - 'deploy*'
 
 jobs:
   test:
