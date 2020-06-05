@@ -21651,6 +21651,24 @@ const getMessage = () => {
         return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${release.commit}|${commitId}>) for Release <${release.url}| ${release.title}>`;
       }
 
+    case 'push':
+      {
+        if (github_1.payload.ref.includes('tags')) {
+          var _context$payload$repo4;
+
+          const pre = 'refs/tags/';
+          const title = github_1.payload.ref.substring(pre.length);
+          const tag = {
+            title,
+            commit: github_1.payload.compare,
+            url: `${(_context$payload$repo4 = github_1.payload.repository) == null ? void 0 : _context$payload$repo4.html_url}/releases/tag/${title}`
+          };
+          return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${tag.commit}|${commitId}>) for Tag <${tag.url}| ${tag.title}>`;
+        }
+
+        return null;
+      }
+
     default:
       return null;
   }
@@ -21658,7 +21676,7 @@ const getMessage = () => {
 
 const notify = function (status, url) {
   try {
-    var _context$payload$repo4;
+    var _context$payload$repo5;
 
     const repository = github_1.payload.repository;
     const sender = github_1.payload.sender;
@@ -21678,7 +21696,7 @@ const notify = function (status, url) {
         footer: `<${repository == null ? void 0 : repository.html_url}|${repository == null ? void 0 : repository.full_name}>`,
         footer_icon: 'https://github.githubassets.com/favicon.ico',
         mrkdwn_in: ['text'],
-        ts: new Date((_context$payload$repo4 = github_1.payload.repository) == null ? void 0 : _context$payload$repo4.pushed_at).getTime().toString(),
+        ts: new Date((_context$payload$repo5 = github_1.payload.repository) == null ? void 0 : _context$payload$repo5.pushed_at).getTime().toString(),
         text: `${message} ${jobParameters(status).text}`
       }]
     };
