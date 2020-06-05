@@ -29,18 +29,35 @@ const jobParameters = (status: JobStatus) => {
 const getMessage = () => {
   const eventName = context.eventName;
 
-  if (eventName === 'pull_request') {
-    const pr = {
-      title: context.payload.pull_request?.title,
-      number: context.payload.pull_request?.number,
-      url: context.payload.pull_request?.html_url,
-    };
+  const runUrl = `${context.payload.repository?.html_url}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+  const commitId = context.sha.substring(0, 7);
 
-    const runUrl = `${context.payload.repository?.html_url}/actions/runs/${process.env.GITHUB_RUN_ID}`;
-    const compareUrl = `${context.payload.repository?.html_url}/compare/${context.payload.pull_request?.head.ref}`;
+  switch (eventName) {
+    case 'pull_request': {
+      const pr = {
+        title: context.payload.pull_request?.title,
+        number: context.payload.pull_request?.number,
+        url: context.payload.pull_request?.html_url,
+      };
 
-    // prettier-ignore
-    return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${compareUrl}|${context.sha.substring(0, 7)}>) for PR <${pr.url}| #${pr.number} ${pr.title}>`;
+      const compareUrl = `${context.payload.repository?.html_url}/compare/${context.payload.pull_request?.head.ref}`;
+
+      // prettier-ignore
+      return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${compareUrl}|${commitId}>) for PR <${pr.url}| #${pr.number} ${pr.title}>`;
+    }
+
+    case 'release': {
+      const release = {
+        title: context.payload.release.name || context.payload.release.tag_name,
+        url: context.payload.release.html_url,
+        commit: `${context.payload.repository?.html_url}/commit/${context.sha}`,
+      };
+      // prettier-ignore
+      return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${release.commit}|${commitId}>) for Release <${release.url}| ${release.title}>`;
+    }
+
+    default:
+      return null;
   }
 };
 
@@ -50,6 +67,13 @@ const getMessage = () => {
 const notify = async (status: JobStatus, url: string) => {
   const repository = context.payload.repository;
   const sender = context.payload.sender;
+
+  const message = getMessage();
+
+  if (!message) {
+    console.log(`We don't support the [${context.eventName}] event yet.`);
+    return;
+  }
 
   const payload = {
     attachments: [
@@ -64,7 +88,7 @@ const notify = async (status: JobStatus, url: string) => {
         ts: new Date(context.payload.repository?.pushed_at)
           .getTime()
           .toString(),
-        text: `${getMessage()} ${jobParameters(status).text}`,
+        text: `${message} ${jobParameters(status).text}`,
       },
     ],
   };
