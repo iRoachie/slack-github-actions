@@ -4,6 +4,14 @@ A no-config GitHub action that notifies slack of the status of your GitHub actio
 
 ![Screenshot](https://user-images.githubusercontent.com/5962998/83519907-ce414100-a4aa-11ea-9361-8bba65126fa4.png)
 
+## Supported Triggers
+
+We currently support:
+
+- `pull_request`
+- `release`
+- `push` (tags)
+
 ## Usage
 
 You can use this action after any other action, however I recommend you put it as the last one. Here is an example setup of this action for a pull request:
