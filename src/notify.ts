@@ -48,7 +48,7 @@ const getMessage = () => {
 
     case 'release': {
       const release = {
-        title: context.payload.release.name,
+        title: context.payload.release.name || context.payload.release.tag_name,
         url: context.payload.release.html_url,
         commit: `${context.payload.repository?.html_url}/commit/${context.sha}`,
       };

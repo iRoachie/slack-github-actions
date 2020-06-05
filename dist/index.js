@@ -21644,7 +21644,7 @@ const getMessage = () => {
         var _context$payload$repo3;
 
         const release = {
-          title: github_1.payload.release.name,
+          title: github_1.payload.release.name || github_1.payload.release.tag_name,
           url: github_1.payload.release.html_url,
           commit: `${(_context$payload$repo3 = github_1.payload.repository) == null ? void 0 : _context$payload$repo3.html_url}/commit/${github_1.sha}`
         };
