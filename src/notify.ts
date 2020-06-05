@@ -56,6 +56,20 @@ const getMessage = () => {
       return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${release.commit}|${commitId}>) for Release <${release.url}| ${release.title}>`;
     }
 
+    case 'push': {
+      const push = {
+        title: '',
+        url: context.payload.release.html_url,
+        commit: `${context.payload.repository?.html_url}/commit/${context.sha}`,
+      };
+
+      console.log('context', context);
+      console.log('payload', context.payload);
+      // prettier-ignore
+      return  null;
+      // `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${release.commit}|${commitId}>) for Push <${push.url}| ${release.title}>`;
+    }
+
     default:
       return null;
   }

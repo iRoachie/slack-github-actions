@@ -21651,6 +21651,13 @@ const getMessage = () => {
         return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${release.commit}|${commitId}>) for Release <${release.url}| ${release.title}>`;
       }
 
+    case 'push':
+      {
+        console.log('context', github_1);
+        console.log('payload', github_1.payload);
+        return null;
+      }
+
     default:
       return null;
   }
@@ -21658,7 +21665,7 @@ const getMessage = () => {
 
 const notify = function (status, url) {
   try {
-    var _context$payload$repo4;
+    var _context$payload$repo5;
 
     const repository = github_1.payload.repository;
     const sender = github_1.payload.sender;
@@ -21678,7 +21685,7 @@ const notify = function (status, url) {
         footer: `<${repository == null ? void 0 : repository.html_url}|${repository == null ? void 0 : repository.full_name}>`,
         footer_icon: 'https://github.githubassets.com/favicon.ico',
         mrkdwn_in: ['text'],
-        ts: new Date((_context$payload$repo4 = github_1.payload.repository) == null ? void 0 : _context$payload$repo4.pushed_at).getTime().toString(),
+        ts: new Date((_context$payload$repo5 = github_1.payload.repository) == null ? void 0 : _context$payload$repo5.pushed_at).getTime().toString(),
         text: `${message} ${jobParameters(status).text}`
       }]
     };
