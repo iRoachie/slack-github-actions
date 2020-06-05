@@ -57,17 +57,21 @@ const getMessage = () => {
     }
 
     case 'push': {
-      const push = {
-        title: '',
-        url: context.payload.release.html_url,
-        commit: `${context.payload.repository?.html_url}/commit/${context.sha}`,
-      };
+      if (context.payload.ref.includes('tags')) {
+        const pre = 'refs/tags/';
+        const title = context.payload.ref.substring(pre.length);
 
-      console.log('context', context);
-      console.log('payload', context.payload);
-      // prettier-ignore
-      return  null;
-      // `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${release.commit}|${commitId}>) for Push <${push.url}| ${release.title}>`;
+        const tag = {
+          title,
+          commit: context.payload.compare,
+          url: `${context.payload.repository?.html_url}/releases/tag/${title}`,
+        };
+
+        // prettier-ignore
+        return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${tag.commit}|${commitId}>) for Tag <${tag.url}| ${tag.title}>`;
+      }
+
+      return null;
     }
 
     default:

@@ -21653,8 +21653,19 @@ const getMessage = () => {
 
     case 'push':
       {
-        console.log('context', github_1);
-        console.log('payload', github_1.payload);
+        if (github_1.payload.ref.includes('tags')) {
+          var _context$payload$repo4;
+
+          const pre = 'refs/tags/';
+          const title = github_1.payload.ref.substring(pre.length);
+          const tag = {
+            title,
+            commit: github_1.payload.compare,
+            url: `${(_context$payload$repo4 = github_1.payload.repository) == null ? void 0 : _context$payload$repo4.html_url}/releases/tag/${title}`
+          };
+          return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${tag.commit}|${commitId}>) for Tag <${tag.url}| ${tag.title}>`;
+        }
+
         return null;
       }
 
