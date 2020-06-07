@@ -142,5 +142,4 @@ jobs:
       - uses: iRoachie/slack-github-actions@v1.0.0
         with:
           status: ${{ job.status }}
-        if: ${{ success() }}
 ```
