@@ -77,7 +77,7 @@ jobs:
       - run: npm test
 
       - name: Notify
-        uses: iRoachie/slack-github-actions
+        uses: iRoachie/slack-github-actions@v1.0.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
