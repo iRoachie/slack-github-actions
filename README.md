@@ -24,6 +24,8 @@ All event messages will have these elements:
 4. Repository Name - Also a link
 5. Timestamp
 
+---
+
 ### Pull Requests
 
 ![Pull Request](https://user-images.githubusercontent.com/5962998/83960228-38b00380-a854-11ea-8353-1f5cf8cf5fc4.png)
@@ -31,12 +33,16 @@ All event messages will have these elements:
 1. Commit Hash - Also a link showing the changes between the base and ref
 2. Pull Request Number and Title - Also a link to the Pull Request
 
+---
+
 ### Releases
 
 ![Release](https://user-images.githubusercontent.com/5962998/83960288-40bc7300-a855-11ea-945d-d55008a41d39.png)
 
 1. Commit Hash - Also a link showing all changes in the release
 2. Release Title - Also a link to the release and notes. _If the release doesn't have a title the tag name will be used._
+
+---
 
 ### Tags
 
