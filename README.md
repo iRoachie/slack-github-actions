@@ -2,7 +2,7 @@
 
 A no-config GitHub action that notifies slack of the status of your GitHub actions
 
-![Screenshot](https://user-images.githubusercontent.com/5962998/83519907-ce414100-a4aa-11ea-9361-8bba65126fa4.png)
+![Demo](https://user-images.githubusercontent.com/5962998/83960496-60549b00-a857-11ea-8875-41d59cbef798.png)
 
 ## Supported Triggers
 
@@ -55,8 +55,8 @@ All event messages will have these elements:
 
 You can use this action after any other action, however I recommend you put it as the last one. Here is an example setup of this action for a pull request:
 
-Create a .github/workflows/test.yml file in your GitHub repo.
-Add the following code to the slack-notify.yml file.
+1. Create a `.github/workflows/test.yml` file in your GitHub repo.
+2. Add the following code to the `test.yml` file.
 
 ```yaml
 name: Test
@@ -85,4 +85,4 @@ jobs:
         if: always()
 ```
 
-Create `SLACK_WEBHOOK` secret using [GitHub Action's Secret](https://developer.github.com/actions/creating-workflows/storing-secrets). You can [generate a Slack incoming webhook token from here.](https://slack.com/apps/A0F7XDUAZ-incoming-webhooks)
+3. Create `SLACK_WEBHOOK` secret using [GitHub Action's Secret](https://developer.github.com/actions/creating-workflows/storing-secrets). You can [generate a Slack incoming webhook token from here.](https://slack.com/apps/A0F7XDUAZ-incoming-webhooks)
