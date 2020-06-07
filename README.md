@@ -2,7 +2,7 @@
 
 A no-config GitHub action that notifies slack of the status of your GitHub actions
 
-![Demo](https://user-images.githubusercontent.com/5962998/83960496-60549b00-a857-11ea-8875-41d59cbef798.png)
+![Demo](https://user-images.githubusercontent.com/5962998/83960734-32248a80-a85a-11ea-813e-ae2f033d0fc7.png)
 
 ## Supported Triggers
 
