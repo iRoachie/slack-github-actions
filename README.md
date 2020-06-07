@@ -65,9 +65,6 @@ on:
   pull_request:
     branches:
       - master
-      
-env:
-  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
 jobs:
   test:
@@ -79,8 +76,9 @@ jobs:
       - run: npm install
       - run: npm test
 
-      - name: Notify
-        uses: iRoachie/slack-github-actions@v1.0.0
+      - uses: iRoachie/slack-github-actions@v1.0.0
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
           status: ${{ job.status }}
         if: ${{ always() }}
@@ -88,16 +86,15 @@ jobs:
 
 3. Create `SLACK_WEBHOOK_URL` secret using [GitHub Action's Secret](https://developer.github.com/actions/creating-workflows/storing-secrets). You can [generate a Slack incoming webhook token from here.](https://slack.com/apps/A0F7XDUAZ-incoming-webhooks)
 
-
 ## Advanced Usage
 
-Here's an example with jobs that run in parallel. 
+Here's an example with jobs that run in parallel.
 
 It does a few things:
 
- - Lets us know when a status check didn't succeed (failure or cancel)
- - If all jobs were successful, we'll send a message at the end
- 
+- Lets us know when a status check didn't succeed (failure or cancel)
+- If all jobs were successful, we'll send a message at the end
+
 ```yaml
 name: Test
 
@@ -105,9 +102,6 @@ on:
   pull_request:
     branches:
       - master
-
-env:
-  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
 jobs:
   test:
@@ -118,6 +112,8 @@ jobs:
       - run: yarn
       - run: yarn test
       - uses: iRoachie/slack-github-actions@v1.0.0
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
           status: ${{ job.status }}
         if: ${{ !success() }}
@@ -130,6 +126,8 @@ jobs:
       - run: yarn
       - run: yarn lint
       - uses: iRoachie/slack-github-actions@v1.0.0
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
           status: ${{ job.status }}
         if: ${{ !success() }}
@@ -140,6 +138,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: iRoachie/slack-github-actions@v1.0.0
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
           status: ${{ job.status }}
 ```
