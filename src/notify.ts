@@ -71,6 +71,7 @@ const getMessage = () => {
         return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${tag.commit}|${commitId}>) for Tag <${tag.url}| ${tag.title}>`;
       }
 
+      console.log('first');
       console.log(context.payload);
 
       // Normal commit pus
