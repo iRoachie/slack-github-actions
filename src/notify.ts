@@ -72,6 +72,7 @@ const getMessage = () => {
       }
 
       console.log(context.payload);
+      console.log('Yep');
 
       // Normal commit push
       return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${context.payload.compare}|${commitId}>) for Commit <${context.payload.head_commit.url}| ${context.payload.head_commit.message}>`;
