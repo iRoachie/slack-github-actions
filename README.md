@@ -10,7 +10,7 @@ We currently support:
 
 - `pull_request`
 - `release`
-- `push` (tags)
+- `push` (tags, commits)
 
 ## Messages
 
@@ -51,6 +51,13 @@ All event messages will have these elements:
 1. Commit Hash - Also a link showing all changes since this tag and master
 2. Tag name - Also a link to the tag
 
+### Commits
+
+![Commits](https://user-images.githubusercontent.com/5962998/85979786-1fabf580-b9af-11ea-88f7-1d71a08e14ee.png)
+
+1. Commit Hash - Also a link showing combined changes of all commits for the push
+2. Head Commit name - Name of last commit in the batch (can push multiple commits). Also a link to that commit.
+
 ## Usage
 
 You can use this action after any other action, however I recommend you put it as the last one. Here is an example setup of this action for a pull request:
@@ -76,7 +83,7 @@ jobs:
       - run: npm install
       - run: npm test
 
-      - uses: iRoachie/slack-github-actions@v1.0.0
+      - uses: iRoachie/slack-github-actions@v1.1.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
@@ -111,7 +118,7 @@ jobs:
       - uses: actions/checkout@v2
       - run: yarn
       - run: yarn test
-      - uses: iRoachie/slack-github-actions@v1.0.0
+      - uses: iRoachie/slack-github-actions@v1.1.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
@@ -125,7 +132,7 @@ jobs:
       - uses: actions/checkout@v2
       - run: yarn
       - run: yarn lint
-      - uses: iRoachie/slack-github-actions@v1.0.0
+      - uses: iRoachie/slack-github-actions@v1.1.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
@@ -137,7 +144,7 @@ jobs:
     needs: [test, lint]
     runs-on: ubuntu-latest
     steps:
-      - uses: iRoachie/slack-github-actions@v1.0.0
+      - uses: iRoachie/slack-github-actions@v1.1.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
