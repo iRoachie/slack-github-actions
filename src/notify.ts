@@ -71,12 +71,8 @@ const getMessage = () => {
         return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${tag.commit}|${commitId}>) for Tag <${tag.url}| ${tag.title}>`;
       }
 
-      console.log('first');
-      console.log('second');
-      console.log(context.payload);
-
-      // Normal commit pus
-      return null;
+      // Normal commit push
+      return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${context.payload.compare}|${commitId}>) for Commit <${context.payload.head_commit.url}| ${context.payload.head_commit.message}>`;
     }
 
     default:
