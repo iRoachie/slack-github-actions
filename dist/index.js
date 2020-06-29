@@ -21666,6 +21666,7 @@ const getMessage = () => {
           return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${tag.commit}|${commitId}>) for Tag <${tag.url}| ${tag.title}>`;
         }
 
+        console.log(github_1.payload);
         return null;
       }
 
