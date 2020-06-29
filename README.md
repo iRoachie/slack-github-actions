@@ -52,7 +52,8 @@ All event messages will have these elements:
 2. Tag name - Also a link to the tag
 
 ### Commits
-![Commit](https://user-images.githubusercontent.com/5962998/85979786-1fabf580-b9af-11ea-88f7-1d71a08e14ee.png)
+
+![Commits](https://user-images.githubusercontent.com/5962998/85979786-1fabf580-b9af-11ea-88f7-1d71a08e14ee.png)
 
 1. Commit Hash - Also a link showing combined changes of all commits for the push
 2. Head Commit name - Name of last commit in the batch (can push multiple commits). Also a link to that commit.
