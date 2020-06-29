@@ -83,7 +83,7 @@ jobs:
       - run: npm install
       - run: npm test
 
-      - uses: iRoachie/slack-github-actions@v1.0.0
+      - uses: iRoachie/slack-github-actions@v1.1.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
@@ -118,7 +118,7 @@ jobs:
       - uses: actions/checkout@v2
       - run: yarn
       - run: yarn test
-      - uses: iRoachie/slack-github-actions@v1.0.0
+      - uses: iRoachie/slack-github-actions@v1.1.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
@@ -132,7 +132,7 @@ jobs:
       - uses: actions/checkout@v2
       - run: yarn
       - run: yarn lint
-      - uses: iRoachie/slack-github-actions@v1.0.0
+      - uses: iRoachie/slack-github-actions@v1.1.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
@@ -144,7 +144,7 @@ jobs:
     needs: [test, lint]
     runs-on: ubuntu-latest
     steps:
-      - uses: iRoachie/slack-github-actions@v1.0.0
+      - uses: iRoachie/slack-github-actions@v1.1.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
