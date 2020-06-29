@@ -72,6 +72,7 @@ const getMessage = () => {
       }
 
       console.log('first');
+      console.log('second');
       console.log(context.payload);
 
       // Normal commit pus

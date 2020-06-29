@@ -21667,6 +21667,7 @@ const getMessage = () => {
         }
 
         console.log('first');
+        console.log('second');
         console.log(github_1.payload);
         return null;
       }
