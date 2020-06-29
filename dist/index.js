@@ -21666,7 +21666,12 @@ const getMessage = () => {
           return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${tag.commit}|${commitId}>) for Tag <${tag.url}| ${tag.title}>`;
         }
 
-        return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${github_1.payload.compare}|${commitId}>) for Commit <${github_1.payload.head_commit.url}| ${github_1.payload.head_commit.message}>`;
+        const commitMessage = github_1.payload.head_commit.message;
+        const headCommit = {
+          title: commitMessage.includes('\n') ? commitMessage.substring(0, commitMessage.indexOf('\n')) : commitMessage,
+          url: github_1.payload.head_commit.url
+        };
+        return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${github_1.payload.compare}|${commitId}>) for Commit <${headCommit.url}| ${headCommit.title}>`;
       }
 
     default:

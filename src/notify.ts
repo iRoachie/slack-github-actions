@@ -71,8 +71,16 @@ const getMessage = () => {
         return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${tag.commit}|${commitId}>) for Tag <${tag.url}| ${tag.title}>`;
       }
 
+      const commitMessage = context.payload.head_commit.message;
+      const headCommit = {
+        title: commitMessage.includes('\n')
+          ? commitMessage.substring(0, commitMessage.indexOf('\n'))
+          : commitMessage,
+        url: context.payload.head_commit.url,
+      };
+
       // Normal commit push
-      return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${context.payload.compare}|${commitId}>) for Commit <${context.payload.head_commit.url}| ${context.payload.head_commit.message}>`;
+      return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${context.payload.compare}|${commitId}>) for Commit <${headCommit.url}| ${headCommit.title}>`;
     }
 
     default:
