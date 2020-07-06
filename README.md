@@ -83,7 +83,7 @@ jobs:
       - run: npm install
       - run: npm test
 
-      - uses: iRoachie/slack-github-actions@v1.1.1
+      - uses: iRoachie/slack-github-actions@v2.0.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
@@ -135,7 +135,7 @@ jobs:
     if: always() # Always runs even if one of the builds fails
     runs-on: ubuntu-latest
     steps:
-      - uses: iRoachie/slack-github-actions@v1.1.1
+      - uses: iRoachie/slack-github-actions@v2.0.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
