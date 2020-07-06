@@ -7,11 +7,11 @@
   "author": "Kyle Roach <kroach.work@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "microbundle -f cjs --target node --external none"
+    "build": "microbundle -f cjs --target node --external none --sourcemap false"
   },
   "dependencies": {
     "@actions/core": "^1.2.4",
-    "@actions/github": "^2.2.0",
+    "@actions/github": "^4.0.0",
     "got": "^11.2.0"
   },
   "devDependencies": {
