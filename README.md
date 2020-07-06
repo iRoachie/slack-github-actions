@@ -118,12 +118,6 @@ jobs:
       - uses: actions/checkout@v2
       - run: yarn
       - run: yarn test
-      - uses: iRoachie/slack-github-actions@v1.1.1
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        with:
-          status: ${{ job.status }}
-        if: ${{ !success() }}
 
   lint:
     name: Eslint
@@ -132,17 +126,12 @@ jobs:
       - uses: actions/checkout@v2
       - run: yarn
       - run: yarn lint
-      - uses: iRoachie/slack-github-actions@v1.1.1
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        with:
-          status: ${{ job.status }}
-        if: ${{ !success() }}
 
   notify:
     Name: Slack
     needs: [test, lint]
     runs-on: ubuntu-latest
+    if: always()
     steps:
       - uses: iRoachie/slack-github-actions@v1.1.1
         env:
