@@ -83,7 +83,7 @@ jobs:
       - run: npm install
       - run: npm test
 
-      - uses: iRoachie/slack-github-actions@v1.1.1
+      - uses: iRoachie/slack-github-actions@v2.0.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
@@ -99,8 +99,10 @@ Here's an example with jobs that run in parallel.
 
 It does a few things:
 
-- Lets us know when a status check didn't succeed (failure or cancel)
+- Lets us know when a status check didn't succeed
 - If all jobs were successful, we'll send a message at the end
+
+> Note that the status variable is omitted here.
 
 ```yaml
 name: Test
@@ -118,12 +120,6 @@ jobs:
       - uses: actions/checkout@v2
       - run: yarn
       - run: yarn test
-      - uses: iRoachie/slack-github-actions@v1.1.1
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        with:
-          status: ${{ job.status }}
-        if: ${{ !success() }}
 
   lint:
     name: Eslint
@@ -132,21 +128,15 @@ jobs:
       - uses: actions/checkout@v2
       - run: yarn
       - run: yarn lint
-      - uses: iRoachie/slack-github-actions@v1.1.1
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        with:
-          status: ${{ job.status }}
-        if: ${{ !success() }}
 
   notify:
     Name: Slack
-    needs: [test, lint]
+    needs: [test, lint] # We only check after the others jobs have run
+    if: always() # Always runs even if one of the builds fails
     runs-on: ubuntu-latest
     steps:
-      - uses: iRoachie/slack-github-actions@v1.1.1
+      - uses: iRoachie/slack-github-actions@v2.0.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        with:
-          status: ${{ job.status }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```

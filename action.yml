@@ -3,8 +3,6 @@ description: A no-config GitHub action that notifies slack of the status of your
 inputs:
   status:
     description: Status of the workflow
-    required: true
-    default: Success
 runs:
   using: node12
   main: dist/index.js
