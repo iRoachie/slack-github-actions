@@ -10,7 +10,7 @@
     "build": "microbundle -f cjs --target node --external none --sourcemap false"
   },
   "dependencies": {
-    "@actions/core": "^1.2.4",
+    "@actions/core": "^1.2.6",
     "@actions/github": "^4.0.0",
     "got": "^11.5.2"
   },
