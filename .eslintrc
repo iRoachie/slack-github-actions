@@ -5,5 +5,10 @@
   },
   "rules": {
     "import/no-commonjs": "off"
+  },
+  "settings": {
+    "react": {
+      "version": "latest"
+    }
   }
 }
