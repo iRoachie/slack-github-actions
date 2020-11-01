@@ -20,5 +20,8 @@
     "microbundle": "^0.12.3",
     "prettier": "^2.0.5",
     "typescript": "^3.9.7"
+  },
+  "engines": {
+    "node": "v14.15.0"
   }
 }
