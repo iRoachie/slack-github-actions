@@ -83,6 +83,10 @@ const getMessage = () => {
       return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${context.payload.compare}|${commitId}>) for Commit <${headCommit.url}| ${headCommit.title}>`;
     }
 
+    case 'schedule': {
+      return `Scheduled Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}>`;
+    }
+
     default:
       return null;
   }

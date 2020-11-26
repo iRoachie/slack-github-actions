@@ -11,6 +11,7 @@ We currently support:
 - `pull_request`
 - `release`
 - `push` (tags, commits)
+- `schedule`
 
 ## Messages
 
@@ -57,6 +58,10 @@ All event messages will have these elements:
 
 1. Commit Hash - Also a link showing combined changes of all commits for the push
 2. Head Commit name - Name of last commit in the batch (can push multiple commits). Also a link to that commit.
+
+### Schedule
+
+![Schedule](https://user-images.githubusercontent.com/5962998/100387966-baad0800-2fff-11eb-8733-56c4400286fa.png)
 
 ## Usage
 
