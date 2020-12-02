@@ -29,7 +29,7 @@ const jobParameters = (status: JobStatus) => {
 const getMessage = () => {
   const eventName = context.eventName;
 
-  const runUrl = `${context.payload.repository?.html_url}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+  const runUrl = `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
   const commitId = context.sha.substring(0, 7);
 
   switch (eventName) {
@@ -96,7 +96,6 @@ const getMessage = () => {
  * Sends message via slack
  */
 const notify = async (status: JobStatus, url: string) => {
-  const repository = context.payload.repository;
   const sender = context.payload.sender;
 
   const message = getMessage();
@@ -106,22 +105,25 @@ const notify = async (status: JobStatus, url: string) => {
     return;
   }
 
+  const attachment = {
+    author_name: sender?.login,
+    author_link: sender?.html_url,
+    author_icon: sender?.avatar_url,
+    color: jobParameters(status).color,
+    footer: `<https://github.com/${process.env.GITHUB_REPOSITORY}|${process.env.GITHUB_REPOSITORY}>`,
+    footer_icon: 'https://github.githubassets.com/favicon.ico',
+    mrkdwn_in: ['text'],
+    ts: new Date(context.payload.repository?.pushed_at).getTime().toString(),
+    text: `${message} ${jobParameters(status).text}`,
+  };
+
+  if (context.eventName === 'schedule') {
+    // Schedule event doesn't have a commit so we use the current time
+    attachment.ts = new Date().getTime().toString();
+  }
+
   const payload = {
-    attachments: [
-      {
-        author_name: sender?.login,
-        author_link: sender?.html_url,
-        author_icon: sender?.avatar_url,
-        color: jobParameters(status).color,
-        footer: `<${repository?.html_url}|${repository?.full_name}>`,
-        footer_icon: 'https://github.githubassets.com/favicon.ico',
-        mrkdwn_in: ['text'],
-        ts: new Date(context.payload.repository?.pushed_at)
-          .getTime()
-          .toString(),
-        text: `${message} ${jobParameters(status).text}`,
-      },
-    ],
+    attachments: [attachment],
   };
 
   await got.post(url, {
