@@ -12781,7 +12781,7 @@ const jobParameters = status => {
 
 const getMessage = () => {
   const eventName = github.context.eventName;
-  const runUrl = `https://${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+  const runUrl = `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
   const commitId = github.context.sha.substring(0, 7);
 
   switch (eventName) {
