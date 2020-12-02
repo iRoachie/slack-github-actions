@@ -61,7 +61,9 @@ All event messages will have these elements:
 
 ### Schedule
 
-![Schedule](https://user-images.githubusercontent.com/5962998/100387966-baad0800-2fff-11eb-8733-56c4400286fa.png)
+![Schedule](https://user-images.githubusercontent.com/5962998/100900010-c9306f00-3498-11eb-9a56-3499d81f2523.png)
+
+> Note that Schedule does not have the user as there's no commit information.
 
 ## Usage
 
