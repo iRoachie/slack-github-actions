@@ -12843,6 +12843,7 @@ const getMessage = () => {
       {
         console.log(runUrl);
         console.log(JSON.stringify(github.context));
+        console.log(process.env);
         return `Scheduled Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}>`;
       }
 

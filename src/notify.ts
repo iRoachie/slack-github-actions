@@ -86,6 +86,7 @@ const getMessage = () => {
     case 'schedule': {
       console.log(runUrl);
       console.log(JSON.stringify(context));
+      console.log(process.env);
       return `Scheduled Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}>`;
     }
 
