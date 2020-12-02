@@ -12868,18 +12868,24 @@ const notify = async (status, url) => {
   console.log(github.context.payload);
   console.log('--------');
   console.log(process.env);
+  const attachment = {
+    author_name: sender == null ? void 0 : sender.login,
+    author_link: sender == null ? void 0 : sender.html_url,
+    author_icon: sender == null ? void 0 : sender.avatar_url,
+    color: jobParameters(status).color,
+    footer: `<${repository == null ? void 0 : repository.html_url}|${repository == null ? void 0 : repository.full_name}>`,
+    footer_icon: 'https://github.githubassets.com/favicon.ico',
+    mrkdwn_in: ['text'],
+    ts: new Date((_context$payload$repo4 = github.context.payload.repository) == null ? void 0 : _context$payload$repo4.pushed_at).getTime().toString(),
+    text: `${message} ${jobParameters(status).text}`
+  };
+
+  if (github.context.eventName === 'schedule') {
+    delete attachment.ts;
+  }
+
   const payload = {
-    attachments: [{
-      author_name: sender == null ? void 0 : sender.login,
-      author_link: sender == null ? void 0 : sender.html_url,
-      author_icon: sender == null ? void 0 : sender.avatar_url,
-      color: jobParameters(status).color,
-      footer: `<${repository == null ? void 0 : repository.html_url}|${repository == null ? void 0 : repository.full_name}>`,
-      footer_icon: 'https://github.githubassets.com/favicon.ico',
-      mrkdwn_in: ['text'],
-      ts: new Date((_context$payload$repo4 = github.context.payload.repository) == null ? void 0 : _context$payload$repo4.pushed_at).getTime().toString(),
-      text: `${message} ${jobParameters(status).text}`
-    }]
+    attachments: [attachment]
   };
   await got.post(url, {
     body: JSON.stringify(payload)
