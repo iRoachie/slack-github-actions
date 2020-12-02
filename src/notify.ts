@@ -96,7 +96,6 @@ const getMessage = () => {
  * Sends message via slack
  */
 const notify = async (status: JobStatus, url: string) => {
-  const repository = context.payload.repository;
   const sender = context.payload.sender;
 
   const message = getMessage();
@@ -106,27 +105,17 @@ const notify = async (status: JobStatus, url: string) => {
     return;
   }
 
-  console.log(context);
-  console.log('--------');
-  console.log(context.payload);
-  console.log('--------');
-  console.log(process.env);
-
   const attachment = {
     author_name: sender?.login,
     author_link: sender?.html_url,
     author_icon: sender?.avatar_url,
     color: jobParameters(status).color,
-    footer: `<${repository?.html_url}|${repository?.full_name}>`,
+    footer: `<https://github.com/${process.env.GITHUB_REPOSITORY}|${process.env.GITHUB_REPOSITORY}>`,
     footer_icon: 'https://github.githubassets.com/favicon.ico',
     mrkdwn_in: ['text'],
     ts: new Date(context.payload.repository?.pushed_at).getTime().toString(),
     text: `${message} ${jobParameters(status).text}`,
   };
-
-  if (context.eventName === 'schedule') {
-    delete attachment.ts;
-  }
 
   const payload = {
     attachments: [attachment],
