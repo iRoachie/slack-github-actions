@@ -29,7 +29,7 @@ const jobParameters = (status: JobStatus) => {
 const getMessage = () => {
   const eventName = context.eventName;
 
-  const runUrl = `${context.payload.repository?.html_url}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+  const runUrl = `https://${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
   const commitId = context.sha.substring(0, 7);
 
   switch (eventName) {
@@ -84,9 +84,6 @@ const getMessage = () => {
     }
 
     case 'schedule': {
-      console.log(runUrl);
-      console.log(JSON.stringify(context));
-      console.log(process.env);
       return `Scheduled Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}>`;
     }
 
@@ -108,6 +105,12 @@ const notify = async (status: JobStatus, url: string) => {
     console.log(`We don't support the [${context.eventName}] event yet.`);
     return;
   }
+
+  console.log(context);
+  console.log('--------');
+  console.log(context.payload);
+  console.log('--------');
+  console.log(process.env);
 
   const payload = {
     attachments: [

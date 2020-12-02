@@ -12780,35 +12780,33 @@ const jobParameters = status => {
 
 
 const getMessage = () => {
-  var _context$payload$repo;
-
   const eventName = github.context.eventName;
-  const runUrl = `${(_context$payload$repo = github.context.payload.repository) == null ? void 0 : _context$payload$repo.html_url}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+  const runUrl = `https://${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
   const commitId = github.context.sha.substring(0, 7);
 
   switch (eventName) {
     case 'pull_request':
       {
-        var _context$payload$pull, _context$payload$pull2, _context$payload$pull3, _context$payload$repo2, _context$payload$pull4;
+        var _context$payload$pull, _context$payload$pull2, _context$payload$pull3, _context$payload$repo, _context$payload$pull4;
 
         const pr = {
           title: (_context$payload$pull = github.context.payload.pull_request) == null ? void 0 : _context$payload$pull.title,
           number: (_context$payload$pull2 = github.context.payload.pull_request) == null ? void 0 : _context$payload$pull2.number,
           url: (_context$payload$pull3 = github.context.payload.pull_request) == null ? void 0 : _context$payload$pull3.html_url
         };
-        const compareUrl = `${(_context$payload$repo2 = github.context.payload.repository) == null ? void 0 : _context$payload$repo2.html_url}/compare/${(_context$payload$pull4 = github.context.payload.pull_request) == null ? void 0 : _context$payload$pull4.head.ref}`; // prettier-ignore
+        const compareUrl = `${(_context$payload$repo = github.context.payload.repository) == null ? void 0 : _context$payload$repo.html_url}/compare/${(_context$payload$pull4 = github.context.payload.pull_request) == null ? void 0 : _context$payload$pull4.head.ref}`; // prettier-ignore
 
         return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${compareUrl}|${commitId}>) for PR <${pr.url}| #${pr.number} ${pr.title}>`;
       }
 
     case 'release':
       {
-        var _context$payload$repo3;
+        var _context$payload$repo2;
 
         const release = {
           title: github.context.payload.release.name || github.context.payload.release.tag_name,
           url: github.context.payload.release.html_url,
-          commit: `${(_context$payload$repo3 = github.context.payload.repository) == null ? void 0 : _context$payload$repo3.html_url}/commit/${github.context.sha}`
+          commit: `${(_context$payload$repo2 = github.context.payload.repository) == null ? void 0 : _context$payload$repo2.html_url}/commit/${github.context.sha}`
         }; // prettier-ignore
 
         return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${release.commit}|${commitId}>) for Release <${release.url}| ${release.title}>`;
@@ -12817,14 +12815,14 @@ const getMessage = () => {
     case 'push':
       {
         if (github.context.payload.ref.includes('tags')) {
-          var _context$payload$repo4;
+          var _context$payload$repo3;
 
           const pre = 'refs/tags/';
           const title = github.context.payload.ref.substring(pre.length);
           const tag = {
             title,
             commit: github.context.payload.compare,
-            url: `${(_context$payload$repo4 = github.context.payload.repository) == null ? void 0 : _context$payload$repo4.html_url}/releases/tag/${title}`
+            url: `${(_context$payload$repo3 = github.context.payload.repository) == null ? void 0 : _context$payload$repo3.html_url}/releases/tag/${title}`
           }; // prettier-ignore
 
           return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${tag.commit}|${commitId}>) for Tag <${tag.url}| ${tag.title}>`;
@@ -12841,9 +12839,6 @@ const getMessage = () => {
 
     case 'schedule':
       {
-        console.log(runUrl);
-        console.log(JSON.stringify(github.context));
-        console.log(process.env);
         return `Scheduled Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}>`;
       }
 
@@ -12857,7 +12852,7 @@ const getMessage = () => {
 
 
 const notify = async (status, url) => {
-  var _context$payload$repo5;
+  var _context$payload$repo4;
 
   const repository = github.context.payload.repository;
   const sender = github.context.payload.sender;
@@ -12868,6 +12863,11 @@ const notify = async (status, url) => {
     return;
   }
 
+  console.log(github.context);
+  console.log('--------');
+  console.log(github.context.payload);
+  console.log('--------');
+  console.log(process.env);
   const payload = {
     attachments: [{
       author_name: sender == null ? void 0 : sender.login,
@@ -12877,7 +12877,7 @@ const notify = async (status, url) => {
       footer: `<${repository == null ? void 0 : repository.html_url}|${repository == null ? void 0 : repository.full_name}>`,
       footer_icon: 'https://github.githubassets.com/favicon.ico',
       mrkdwn_in: ['text'],
-      ts: new Date((_context$payload$repo5 = github.context.payload.repository) == null ? void 0 : _context$payload$repo5.pushed_at).getTime().toString(),
+      ts: new Date((_context$payload$repo4 = github.context.payload.repository) == null ? void 0 : _context$payload$repo4.pushed_at).getTime().toString(),
       text: `${message} ${jobParameters(status).text}`
     }]
   };
