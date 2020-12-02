@@ -12873,6 +12873,12 @@ const notify = async (status, url) => {
     ts: new Date((_context$payload$repo4 = github.context.payload.repository) == null ? void 0 : _context$payload$repo4.pushed_at).getTime().toString(),
     text: `${message} ${jobParameters(status).text}`
   };
+
+  if (github.context.eventName === 'schedule') {
+    // Schedule event doesn't have a commit so we use the current time
+    attachment.ts = new Date().getTime().toString();
+  }
+
   const payload = {
     attachments: [attachment]
   };

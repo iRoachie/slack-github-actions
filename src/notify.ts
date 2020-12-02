@@ -117,6 +117,11 @@ const notify = async (status: JobStatus, url: string) => {
     text: `${message} ${jobParameters(status).text}`,
   };
 
+  if (context.eventName === 'schedule') {
+    // Schedule event doesn't have a commit so we use the current time
+    attachment.ts = new Date().getTime().toString();
+  }
+
   const payload = {
     attachments: [attachment],
   };
