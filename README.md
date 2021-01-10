@@ -12,6 +12,7 @@ We currently support:
 - `release`
 - `push` (tags, commits)
 - `schedule`
+- `create (branch)`
 
 ## Messages
 
@@ -64,6 +65,12 @@ All event messages will have these elements:
 ![Schedule](https://user-images.githubusercontent.com/5962998/100900010-c9306f00-3498-11eb-9a56-3499d81f2523.png)
 
 > Note that Schedule does not have the user as there's no commit information.
+
+### Create
+
+![Create](https://user-images.githubusercontent.com/5962998/104134782-22c26e00-5362-11eb-9855-d40b6fc1bf7d.png)
+
+1. Branch Name - Also link to the branch.
 
 ## Usage
 
