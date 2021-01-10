@@ -12848,8 +12848,8 @@ const getMessage = () => {
           return null;
         }
 
-        const pre = 'refs/tags/';
-        const branchName = github.context.payload.ref.substring(pre.length);
+        const pre = 'refs/heads/';
+        const branchName = github.context.ref.substring(pre.length);
         const branchUrl = `${github.context.payload.repository.html_url}/tree/${branchName}`;
         return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> for Creation of Branch <${branchUrl}|${branchName}>`;
       }
