@@ -12842,6 +12842,18 @@ const getMessage = () => {
         return `Scheduled Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}>`;
       }
 
+    case 'create':
+      {
+        if (github.context.payload.ref_type !== 'branch') {
+          return null;
+        }
+
+        const pre = 'refs/heads/';
+        const branchName = github.context.ref.substring(pre.length);
+        const branchUrl = `${github.context.payload.repository.html_url}/tree/${branchName}`;
+        return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> for Creation of Branch <${branchUrl}|${branchName}>`;
+      }
+
     default:
       return null;
   }
@@ -12858,6 +12870,7 @@ const notify = async (status, url) => {
   const message = getMessage();
 
   if (!message) {
+    core$1.debug(JSON.stringify(github.context));
     console.log(`We don't support the [${github.context.eventName}] event yet.`);
     return;
   }

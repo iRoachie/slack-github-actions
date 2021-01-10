@@ -1,4 +1,5 @@
 import got from 'got';
+import core from '@actions/core';
 import { context } from '@actions/github';
 
 export type JobStatus = 'success' | 'failure' | 'cancelled';
@@ -87,6 +88,18 @@ const getMessage = () => {
       return `Scheduled Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}>`;
     }
 
+    case 'create': {
+      if (context.payload.ref_type !== 'branch') {
+        return null;
+      }
+
+      const pre = 'refs/heads/';
+      const branchName = context.ref.substring(pre.length);
+      const branchUrl = `${context.payload.repository.html_url}/tree/${branchName}`;
+
+      return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> for Creation of Branch <${branchUrl}|${branchName}>`;
+    }
+
     default:
       return null;
   }
@@ -101,6 +114,7 @@ const notify = async (status: JobStatus, url: string) => {
   const message = getMessage();
 
   if (!message) {
+    core.debug(JSON.stringify(context));
     console.log(`We don't support the [${context.eventName}] event yet.`);
     return;
   }
