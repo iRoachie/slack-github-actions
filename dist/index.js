@@ -12842,6 +12842,18 @@ const getMessage = () => {
         return `Scheduled Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}>`;
       }
 
+    case 'create':
+      {
+        if (github.context.payload.ref_type !== 'branch') {
+          return null;
+        }
+
+        const pre = 'refs/tags/';
+        const branchName = github.context.payload.ref.substring(pre.length);
+        const branchUrl = `${github.context.payload.repository.html_url}/tree/${branchName}`;
+        return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> for Creation of Branch <${branchUrl}|${branchName}>`;
+      }
+
     default:
       return null;
   }
