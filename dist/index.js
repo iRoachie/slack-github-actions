@@ -12858,6 +12858,7 @@ const notify = async (status, url) => {
   const message = getMessage();
 
   if (!message) {
+    core$1.debug(JSON.stringify(github.context));
     console.log(`We don't support the [${github.context.eventName}] event yet.`);
     return;
   }

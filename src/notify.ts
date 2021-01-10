@@ -1,4 +1,5 @@
 import got from 'got';
+import core from '@actions/core';
 import { context } from '@actions/github';
 
 export type JobStatus = 'success' | 'failure' | 'cancelled';
@@ -101,6 +102,7 @@ const notify = async (status: JobStatus, url: string) => {
   const message = getMessage();
 
   if (!message) {
+    core.debug(JSON.stringify(context));
     console.log(`We don't support the [${context.eventName}] event yet.`);
     return;
   }
