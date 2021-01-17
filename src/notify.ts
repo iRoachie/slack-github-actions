@@ -100,6 +100,18 @@ const getMessage = () => {
       return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> for Creation of Branch <${branchUrl}|${branchName}>`;
     }
 
+    case 'delete': {
+      if (context.payload.ref_type !== 'branch') {
+        return null;
+      }
+
+      const pre = 'refs/heads/';
+      const branchName = context.ref.substring(pre.length);
+      const branchUrl = `${context.payload.repository.html_url}/tree/${branchName}`;
+
+      return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> for Deletion of Branch <${branchUrl}|${branchName}>`;
+    }
+
     default:
       return null;
   }

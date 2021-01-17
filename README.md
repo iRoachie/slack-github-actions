@@ -13,6 +13,7 @@ We currently support:
 - `push` (tags, commits)
 - `schedule`
 - `create (branch)`
+- `delete (branch)`
 
 ## Messages
 
@@ -69,6 +70,12 @@ All event messages will have these elements:
 ### Create
 
 ![Create](https://user-images.githubusercontent.com/5962998/104134782-22c26e00-5362-11eb-9855-d40b6fc1bf7d.png)
+
+1. Branch Name - Also link to the branch.
+
+### Delete
+
+![Delete](https://user-images.githubusercontent.com/5962998/104859330-f1661700-58fa-11eb-9e23-536d8ed443cd.png)
 
 1. Branch Name - Also link to the branch.
 
