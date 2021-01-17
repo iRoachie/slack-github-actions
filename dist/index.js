@@ -12880,9 +12880,9 @@ const notify = async (status, url) => {
 
   const sender = github.context.payload.sender;
   const message = getMessage();
+  core$1.debug(JSON.stringify(github.context));
 
   if (!message) {
-    core$1.debug(JSON.stringify(github.context));
     console.log(`We don't support the [${github.context.eventName}] event yet.`);
     return;
   }

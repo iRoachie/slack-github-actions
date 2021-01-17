@@ -124,9 +124,9 @@ const notify = async (status: JobStatus, url: string) => {
   const sender = context.payload.sender;
 
   const message = getMessage();
+  core.debug(JSON.stringify(context));
 
   if (!message) {
-    core.debug(JSON.stringify(context));
     console.log(`We don't support the [${context.eventName}] event yet.`);
     return;
   }
