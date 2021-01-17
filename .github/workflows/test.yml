@@ -12,6 +12,7 @@ on:
     branches:
       - '*'
   create:
+  delete:
 
 jobs:
   test:
