@@ -75,9 +75,9 @@ All event messages will have these elements:
 
 ### Delete
 
-![Delete](https://user-images.githubusercontent.com/5962998/104859330-f1661700-58fa-11eb-9e23-536d8ed443cd.png)
+![Delete](https://user-images.githubusercontent.com/5962998/104859938-0ba1f400-58ff-11eb-8645-9c5cedac4bde.png)
 
-1. Branch Name - Also link to the branch.
+1. Branch Name
 
 ## Usage
 
