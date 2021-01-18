@@ -105,11 +105,8 @@ const getMessage = () => {
         return null;
       }
 
-      const pre = 'refs/heads/';
-      const branchName = context.ref.substring(pre.length);
-      const branchUrl = `${context.payload.repository.html_url}/tree/${branchName}`;
-
-      return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> for Deletion of Branch <${branchUrl}|${branchName}>`;
+      const branchName = context.payload.ref;
+      return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> for Deletion of Branch \`${branchName}\``;
     }
 
     default:
