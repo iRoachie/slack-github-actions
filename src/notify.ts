@@ -57,6 +57,19 @@ const getMessage = () => {
       return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${release.commit}|${commitId}>) for Release <${release.url}| ${release.title}>`;
     }
 
+    case 'workflow_run': {
+      const commitMessage = context.payload.workflow_run.head_commit.message;
+      const headCommit = {
+        title: commitMessage.includes('\n')
+          ? commitMessage.substring(0, commitMessage.indexOf('\n'))
+          : commitMessage,
+        url: context.payload.workflow_run.head_commit.url,
+      };
+      const commitUrl = `${context.payload.repository?.html_url}/commit/${commitId}`;
+      // prettier-ignore
+      return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${commitUrl}|${commitId}>) for Commit <${commitUrl}| ${headCommit.title}>`;
+    }
+
     case 'push': {
       if (context.payload.ref.includes('tags')) {
         const pre = 'refs/tags/';

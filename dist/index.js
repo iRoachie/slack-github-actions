@@ -12812,17 +12812,31 @@ const getMessage = () => {
         return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${release.commit}|${commitId}>) for Release <${release.url}| ${release.title}>`;
       }
 
+    case 'workflow_run':
+      {
+        var _context$payload$repo3;
+
+        const commitMessage = github.context.payload.workflow_run.head_commit.message;
+        const headCommit = {
+          title: commitMessage.includes('\n') ? commitMessage.substring(0, commitMessage.indexOf('\n')) : commitMessage,
+          url: github.context.payload.workflow_run.head_commit.url
+        };
+        const commitUrl = `${(_context$payload$repo3 = github.context.payload.repository) == null ? void 0 : _context$payload$repo3.html_url}/commit/${commitId}`; // prettier-ignore
+
+        return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${commitUrl}|${commitId}>) for Commit <${commitUrl}| ${headCommit.title}>`;
+      }
+
     case 'push':
       {
         if (github.context.payload.ref.includes('tags')) {
-          var _context$payload$repo3;
+          var _context$payload$repo4;
 
           const pre = 'refs/tags/';
           const title = github.context.payload.ref.substring(pre.length);
           const tag = {
             title,
             commit: github.context.payload.compare,
-            url: `${(_context$payload$repo3 = github.context.payload.repository) == null ? void 0 : _context$payload$repo3.html_url}/releases/tag/${title}`
+            url: `${(_context$payload$repo4 = github.context.payload.repository) == null ? void 0 : _context$payload$repo4.html_url}/releases/tag/${title}`
           }; // prettier-ignore
 
           return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${tag.commit}|${commitId}>) for Tag <${tag.url}| ${tag.title}>`;
@@ -12874,7 +12888,7 @@ const getMessage = () => {
 
 
 const notify = async (status, url) => {
-  var _context$payload$repo4;
+  var _context$payload$repo5;
 
   const sender = github.context.payload.sender;
   const message = getMessage();
@@ -12893,7 +12907,7 @@ const notify = async (status, url) => {
     footer: `<https://github.com/${process.env.GITHUB_REPOSITORY}|${process.env.GITHUB_REPOSITORY}>`,
     footer_icon: 'https://github.githubassets.com/favicon.ico',
     mrkdwn_in: ['text'],
-    ts: new Date((_context$payload$repo4 = github.context.payload.repository) == null ? void 0 : _context$payload$repo4.pushed_at).getTime().toString(),
+    ts: new Date((_context$payload$repo5 = github.context.payload.repository) == null ? void 0 : _context$payload$repo5.pushed_at).getTime().toString(),
     text: `${message} ${jobParameters(status).text}`
   };
 
