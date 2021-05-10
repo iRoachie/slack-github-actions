@@ -1,0 +1,12 @@
+version: 2
+updates:
+  # Configuration for npm
+  - package-ecosystem: npm
+    directory: '/'
+    # Schedule to run every Monday at 08:00 UK Time
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '08:00'
+      timezone: Europe/London
+    open-pull-requests-limit: 10
