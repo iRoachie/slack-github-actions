@@ -16,7 +16,7 @@
     "got": "11.8.2"
   },
   "devDependencies": {
-    "eslint": "7.26.x",
+    "eslint": "7.27.x",
     "eslint-config-satya164": "3.1.x",
     "microbundle": "0.13.x",
     "prettier": "2.3.x",
