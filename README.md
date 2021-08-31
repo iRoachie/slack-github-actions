@@ -1,6 +1,6 @@
 # Slack Github Actions
 
-A no-config GitHub action that notifies slack of the status of your GitHub actions
+A no-config GitHub action that notifies slack and cliq of the status of your GitHub actions
 
 ![Demo](https://user-images.githubusercontent.com/5962998/83960734-32248a80-a85a-11ea-813e-ae2f033d0fc7.png)
 
@@ -161,3 +161,50 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
+## Cliq Usage
+
+Here's an example that posts to a cliq channel as well as slack.
+
+The platforms input takes a comma delimited list of communication platforms to send the message to. Currently supported platforms are slack and cliq.
+
+When using the cliq platform, the [`CLIQ_WEBHOOK_TOKEN`](https://www.zoho.com/cliq/help/platform/webhook-tokens.html) and [`CLIQ_CHANNEL`](https://www.zoho.com/deluge/help/cliq/zoho-cliq-integration-attributes.html#channel_name) environment variables are required. An environment variable for `CLIQ_HOST` is optional and defaults to cliq.zoho.eu
+
+```yaml
+name: Test
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    name: Jest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: yarn
+      - run: yarn test
+
+  lint:
+    name: Eslint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: yarn
+      - run: yarn lint
+
+  notify:
+    Name: Slack
+    needs: [test, lint]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: iRoachie/slack-github-actions@v2.3.0
+        with:
+          platforms: slack, cliq # notice cliq as well as slack specified as the platforms to notify
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required for the slack platform
+          CLIQ_WEBHOOK_TOKEN: ${{ secrets.CLIQ_WEBHOOK_TOKEN }} # required for the cliq platform
+          CLIQ_CHANNEL: ${{ secrets.CLIQ_CHANNEL }} # required for the cliq platform
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
