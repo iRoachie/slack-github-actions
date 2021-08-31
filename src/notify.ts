@@ -12,14 +12,17 @@ const jobParameters = (status: JobStatus) => {
     success: {
       color: 'good',
       text: 'succeeded',
+      emoji: ':champagne:',
     },
     failure: {
       color: 'danger',
       text: 'failed',
+      emoji: ':bug:',
     },
     cancelled: {
       color: 'warning',
       text: 'was cancelled.',
+      emoji: ':facepalm:',
     },
   }[status];
 };
@@ -115,11 +118,9 @@ const getMessage = () => {
 };
 
 /**
- * Sends message via slack
+ * Sends message via slack or cliq
  */
-const notify = async (status: JobStatus, url: string) => {
-  const sender = context.payload.sender;
-
+const notify = async (status: JobStatus, url: string, platform: string) => {
   const message = getMessage();
   core.debug(JSON.stringify(context));
 
@@ -127,6 +128,21 @@ const notify = async (status: JobStatus, url: string) => {
     console.log(`We don't support the [${context.eventName}] event yet.`);
     return;
   }
+
+  let payload;
+  if (platform === 'slack') {
+    payload = buildSlackPayload(status, message);
+  } else if (platform === 'cliq') {
+    payload = buildCliqPayload(status, message);
+  }
+
+  await got.post(url, {
+    body: JSON.stringify(payload),
+  });
+};
+
+const buildSlackPayload = (status: JobStatus, message: string) => {
+  const sender = context.payload.sender;
 
   const attachment = {
     author_name: sender?.login,
@@ -149,9 +165,40 @@ const notify = async (status: JobStatus, url: string) => {
     attachments: [attachment],
   };
 
-  await got.post(url, {
-    body: JSON.stringify(payload),
-  });
+  return payload;
+};
+
+const buildCliqPayload = (status: JobStatus, message: string) => {
+  const sender = context.payload.sender;
+  const timestamp =
+    context.eventName === 'schedule'
+      ? new Date().toString()
+      : new Date(context.payload.repository?.pushed_at).toString();
+
+  // Convert hyperlinks from Slack format <link|text> to Cliq format [text](link)
+  let cliqMessage = message.replace(/<([^|]*)\|([^>]*)>/g, '[$2]($1)');
+
+  return {
+    bot: {
+      name: 'Github Actions',
+      image:
+        'https://avatars.slack-edge.com/2020-06-05/1167422634643_d2bfd65174d43767f2a4_512.png',
+    },
+    card: {
+      theme: 'modern-inline',
+      title: `[${sender?.login}](${sender?.html_url})`,
+      icon: sender?.avatar_url,
+    },
+    text: `${jobParameters(status).emoji} ${cliqMessage} ${
+      jobParameters(status).text
+    }`,
+    slides: [
+      {
+        type: 'text',
+        data: `[${process.env.GITHUB_REPOSITORY}](https://github.com/${process.env.GITHUB_REPOSITORY})\n${timestamp}`,
+      },
+    ],
+  };
 };
 
 export default notify;

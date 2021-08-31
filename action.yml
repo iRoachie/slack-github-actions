@@ -3,6 +3,9 @@ description: A no-config GitHub action that notifies slack of the status of your
 inputs:
   status:
     description: Status of the workflow
+  platforms:
+    description: Comma delimited list of platforms (slack, cliq) to use for the notifications.
+    default: slack
 runs:
   using: node12
   main: dist/index.js
