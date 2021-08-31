@@ -176,7 +176,10 @@ const buildCliqPayload = (status: JobStatus, message: string) => {
       : new Date(context.payload.repository?.pushed_at).toString();
 
   // Convert hyperlinks from Slack format <link|text> to Cliq format [text](link)
-  let cliqMessage = message.replace(/<([^|]*)\|([^>]*)>/g, '[$2]($1)');
+  // Also ([text](link)) doesn't render properly, so inserts some spaces.
+  let cliqMessage = message
+    .replace(/\(<([^|]*)\|([^>]*)>\)/g, '( [$2]($1) )')
+    .replace(/<([^|]*)\|([^>]*)>/g, '[$2]($1)');
 
   return {
     bot: {
