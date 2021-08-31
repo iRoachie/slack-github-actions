@@ -1,7 +1,11 @@
 import core from '@actions/core';
 import notify, { JobStatus } from './notify';
 import { getJobsStatus } from './multiple-jobs';
-import { validatePlatforms, supportedPlatforms } from './supported-platforms';
+import {
+  validatePlatforms,
+  supportedPlatforms,
+  SupportedPlatform,
+} from './supported-platforms';
 
 async function run() {
   try {
@@ -46,7 +50,7 @@ async function run() {
     }
 
     await Promise.all(
-      platforms.map(async (platform) => {
+      platforms.map(async (platform: SupportedPlatform) => {
         let url;
         if (platform === 'slack') {
           url = slackUrl;

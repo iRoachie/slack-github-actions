@@ -1,13 +1,14 @@
 import core from '@actions/core';
 
-export type supportedPlatform = 'slack' | 'cliq';
-export const supportedPlatforms = ['slack', 'cliq'];
+// https://www.typescriptlang.org/play?#code/MYewdgzgLgBANgQzAcwK4OQUwjAvDAbQFgAoGGAckxTgEsIALCgGlPIoDMAna4J0gLowEOUJCilJJKAE8ADphgBlVHLkguUTABMAMkjQZF+WQpAd4B9FggEwqALYAjTFwFSx0YcGCY5UfRRrYxgACkQgowAuZVV1TR1AwywASjwAPhgAb1IAXykEHz8AqyNQqhp6JhSgA
+export const supportedPlatforms = ['slack', 'cliq'] as const;
+export type SupportedPlatform = typeof supportedPlatforms[number];
 
 export const validatePlatforms = () => {
   return core
     .getInput('platforms')
     .split(',')
-    .map((platform) => platform.trim())
+    .map((platform) => platform.trim() as SupportedPlatform)
     .reduce(
       (platforms, platform) => {
         if (supportedPlatforms.includes(platform)) {
