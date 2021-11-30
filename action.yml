@@ -1,8 +1,10 @@
 name: Slack Github Actions
+author: Risk Ledger
 description: A no-config GitHub action that notifies slack of the status of your GitHub actions
 inputs:
   status:
     description: Status of the workflow
+    required: false
 runs:
   using: node12
   main: dist/index.js

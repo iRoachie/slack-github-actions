@@ -21,5 +21,9 @@
     "microbundle": "0.14.x",
     "prettier": "2.4.x",
     "typescript": "4.4.x"
+  },
+  "engines": {
+    "node": ">= 16.13.0",
+    "yarn": ">= 1.22.15"
   }
 }
