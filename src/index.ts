@@ -5,10 +5,8 @@ import { getJobsStatus } from './multiple-jobs';
 async function run() {
   try {
     const url = process.env.SLACK_WEBHOOK_URL;
-
-    if (!url) {
+    if (!url)
       throw new Error('Please set [SLACK_WEBHOOK_URL] environment variable');
-    }
 
     let jobStatus = core.getInput('status');
 
@@ -25,7 +23,7 @@ async function run() {
     }
 
     await notify(jobStatus as JobStatus, url);
-  } catch (error) {
+  } catch (error: any) {
     core.setFailed(error.message);
     core.debug(error.stack);
   }
