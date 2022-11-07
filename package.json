@@ -16,7 +16,7 @@
     "axios": "^1.1.3"
   },
   "devDependencies": {
-    "@types/node": "^18.11.9",
+    "@types/node": "^16.18.3",
     "@vercel/ncc": "^0.34.0",
     "eslint": "^8.27.0",
     "eslint-config-satya164": "^3.1.11",
@@ -24,7 +24,7 @@
     "typescript": "^4.8.4"
   },
   "engines": {
-    "node": "v18"
+    "node": "v16"
   },
   "pnpm": {
     "peerDependencyRules": {
