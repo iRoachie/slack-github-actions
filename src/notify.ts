@@ -1,3 +1,4 @@
+import axios from 'axios';
 import core from '@actions/core';
 import { context } from '@actions/github';
 
@@ -150,10 +151,7 @@ const notify = async (status: JobStatus, url: string) => {
     attachments: [attachment],
   };
 
-  await fetch(url, {
-    method: 'POST',
-    body: JSON.stringify(payload),
-  });
+  await axios.post(url, payload);
 };
 
 export default notify;
