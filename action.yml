@@ -4,7 +4,7 @@ inputs:
   status:
     description: Status of the workflow
 runs:
-  using: node12
+  using: node16
   main: dist/index.js
 branding:
   icon: 'check-circle'
