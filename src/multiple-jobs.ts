@@ -21,7 +21,7 @@ const getJobs = async () => {
 export const getJobsStatus = async () => {
   const jobs = await getJobs();
 
-  if (jobs.some((a) => ['failure', 'timed_out'].includes(a.conclusion))) {
+  if (jobs.some((a) => ['failure', 'timed_out'].includes(a.conclusion!))) {
     return 'failure';
   }
 

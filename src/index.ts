@@ -26,8 +26,10 @@ async function run() {
 
     await notify(jobStatus as JobStatus, url);
   } catch (error) {
-    core.setFailed(error.message);
-    core.debug(error.stack);
+    if (error instanceof Error) {
+      core.setFailed(error.message);
+      core.debug(error.stack!);
+    }
   }
 }
 

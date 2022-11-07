@@ -7,22 +7,22 @@
   "author": "Kyle Roach <kroach.work@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "microbundle -f cjs --target node --external none --sourcemap false",
+    "build": "ncc build src/index.ts --license licenses.txt",
     "lint": "eslint src"
   },
   "dependencies": {
-    "@actions/core": "^1.2.6",
-    "@actions/github": "^4.0.0",
-    "got": "^11.8.0"
+    "@actions/core": "^1.10.0",
+    "@actions/github": "^4.0.0"
   },
   "devDependencies": {
-    "eslint": "^7.12.1",
-    "eslint-config-satya164": "^3.1.8",
-    "microbundle": "^0.12.4",
-    "prettier": "^2.1.2",
-    "typescript": "^4.0.5"
+    "@types/node": "^18.11.9",
+    "@vercel/ncc": "^0.34.0",
+    "eslint": "^8.27.0",
+    "eslint-config-satya164": "^3.1.11",
+    "prettier": "^2.7.1",
+    "typescript": "^4.8.4"
   },
   "engines": {
-    "node": "v14.15.0"
+    "node": "v18"
   }
 }
