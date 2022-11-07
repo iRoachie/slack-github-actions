@@ -13687,11 +13687,34 @@ function wrappy (fn, cb) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core_1 = __importDefault(__nccwpck_require__(7954));
+const core = __importStar(__nccwpck_require__(7954));
 const notify_1 = __importDefault(__nccwpck_require__(7310));
 const multiple_jobs_1 = __nccwpck_require__(6097);
 async function run() {
@@ -13700,7 +13723,7 @@ async function run() {
         if (!url) {
             throw new Error('Please set [SLACK_WEBHOOK_URL] environment variable');
         }
-        let jobStatus = core_1.default.getInput('status');
+        let jobStatus = core.getInput('status');
         if (!jobStatus) {
             if (!process.env.GITHUB_TOKEN) {
                 throw new Error('Please pass in [GITHUB_TOKEN] environment variable');
@@ -13716,8 +13739,8 @@ async function run() {
     }
     catch (error) {
         if (error instanceof Error) {
-            core_1.default.setFailed(error.message);
-            core_1.default.debug(error.stack);
+            core.setFailed(error.message);
+            core.debug(error.stack);
         }
     }
 }
@@ -13768,12 +13791,35 @@ exports.getJobsStatus = getJobsStatus;
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const axios_1 = __importDefault(__nccwpck_require__(3242));
-const core_1 = __importDefault(__nccwpck_require__(7954));
+const core = __importStar(__nccwpck_require__(7954));
 const github_1 = __nccwpck_require__(7586);
 /**
  * Returns parameters depending on the status of the workflow
@@ -13872,7 +13918,7 @@ const getMessage = () => {
 const notify = async (status, url) => {
     const sender = github_1.context.payload.sender;
     const message = getMessage();
-    core_1.default.debug(JSON.stringify(github_1.context));
+    core.debug(JSON.stringify(github_1.context));
     if (!message) {
         console.log(`We don't support the [${github_1.context.eventName}] event yet.`);
         return;

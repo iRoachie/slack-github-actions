@@ -1,4 +1,4 @@
-import core from '@actions/core';
+import * as core from '@actions/core';
 import notify, { JobStatus } from './notify';
 import { getJobsStatus } from './multiple-jobs';
 
