@@ -1,4 +1,5 @@
-import core from '@actions/core';
+import axios from 'axios';
+import * as core from '@actions/core';
 import { context } from '@actions/github';
 
 export type JobStatus = 'success' | 'failure' | 'cancelled';
@@ -150,10 +151,7 @@ const notify = async (status: JobStatus, url: string) => {
     attachments: [attachment],
   };
 
-  await fetch(url, {
-    method: 'POST',
-    body: JSON.stringify(payload),
-  });
+  await axios.post(url, payload);
 };
 
 export default notify;
