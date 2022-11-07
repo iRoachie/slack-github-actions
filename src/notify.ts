@@ -1,4 +1,3 @@
-import got from 'got';
 import core from '@actions/core';
 import { context } from '@actions/github';
 
@@ -95,7 +94,9 @@ const getMessage = () => {
 
       const pre = 'refs/heads/';
       const branchName = context.ref.substring(pre.length);
-      const branchUrl = `${context.payload.repository.html_url}/tree/${branchName}`;
+      const branchUrl = `${
+        context.payload.repository!.html_url
+      }/tree/${branchName}`;
 
       return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> for Creation of Branch <${branchUrl}|${branchName}>`;
     }
@@ -149,7 +150,8 @@ const notify = async (status: JobStatus, url: string) => {
     attachments: [attachment],
   };
 
-  await got.post(url, {
+  await fetch(url, {
+    method: 'POST',
     body: JSON.stringify(payload),
   });
 };
