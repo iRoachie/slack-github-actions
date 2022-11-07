@@ -5338,7 +5338,7 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 
 var Stream = _interopDefault(__nccwpck_require__(2781));
 var http = _interopDefault(__nccwpck_require__(3685));
-var Url = _interopDefault(__nccwpck_require__(7310));
+var Url = _interopDefault(__nccwpck_require__(5034));
 var whatwgUrl = _interopDefault(__nccwpck_require__(1241));
 var https = _interopDefault(__nccwpck_require__(5687));
 var zlib = _interopDefault(__nccwpck_require__(9796));
@@ -10234,6 +10234,228 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
+/***/ 8891:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const core_1 = __importDefault(__nccwpck_require__(7954));
+const notify_1 = __importDefault(__nccwpck_require__(7310));
+const multiple_jobs_1 = __nccwpck_require__(6097);
+async function run() {
+    try {
+        const url = process.env.SLACK_WEBHOOK_URL;
+        if (!url) {
+            throw new Error('Please set [SLACK_WEBHOOK_URL] environment variable');
+        }
+        let jobStatus = core_1.default.getInput('status');
+        if (!jobStatus) {
+            if (!process.env.GITHUB_TOKEN) {
+                throw new Error('Please pass in [GITHUB_TOKEN] environment variable');
+            }
+            jobStatus = await (0, multiple_jobs_1.getJobsStatus)();
+        }
+        else {
+            if (!['success', 'failure', 'cancelled'].includes(jobStatus)) {
+                throw new Error('Unknown job status passed in.');
+            }
+        }
+        await (0, notify_1.default)(jobStatus, url);
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            core_1.default.setFailed(error.message);
+            core_1.default.debug(error.stack);
+        }
+    }
+}
+run();
+
+
+/***/ }),
+
+/***/ 6097:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getJobsStatus = void 0;
+const github_1 = __nccwpck_require__(7586);
+const getJobs = async () => {
+    const Octokit = (0, github_1.getOctokit)(process.env.GITHUB_TOKEN);
+    const { data } = await Octokit.actions.listJobsForWorkflowRun({
+        ...github_1.context.repo,
+        run_id: github_1.context.runId,
+    });
+    const currentJob = github_1.context.job;
+    return data.jobs
+        .map((a) => ({
+        name: a.name,
+        conclusion: a.conclusion,
+    }))
+        .filter((a) => a.name !== currentJob);
+};
+const getJobsStatus = async () => {
+    const jobs = await getJobs();
+    if (jobs.some((a) => ['failure', 'timed_out'].includes(a.conclusion))) {
+        return 'failure';
+    }
+    if (jobs.some((a) => a.conclusion === 'cancelled')) {
+        return 'cancelled';
+    }
+    return 'success';
+};
+exports.getJobsStatus = getJobsStatus;
+
+
+/***/ }),
+
+/***/ 7310:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const core_1 = __importDefault(__nccwpck_require__(7954));
+const github_1 = __nccwpck_require__(7586);
+/**
+ * Returns parameters depending on the status of the workflow
+ */
+const jobParameters = (status) => {
+    return {
+        success: {
+            color: 'good',
+            text: 'succeeded',
+        },
+        failure: {
+            color: 'danger',
+            text: 'failed',
+        },
+        cancelled: {
+            color: 'warning',
+            text: 'was cancelled.',
+        },
+    }[status];
+};
+/**
+ * Returns message for slack based on event type
+ */
+const getMessage = () => {
+    const eventName = github_1.context.eventName;
+    const runUrl = `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+    const commitId = github_1.context.sha.substring(0, 7);
+    switch (eventName) {
+        case 'pull_request': {
+            const pr = {
+                title: github_1.context.payload.pull_request?.title,
+                number: github_1.context.payload.pull_request?.number,
+                url: github_1.context.payload.pull_request?.html_url,
+            };
+            const compareUrl = `${github_1.context.payload.repository?.html_url}/compare/${github_1.context.payload.pull_request?.head.ref}`;
+            // prettier-ignore
+            return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${compareUrl}|${commitId}>) for PR <${pr.url}| #${pr.number} ${pr.title}>`;
+        }
+        case 'release': {
+            const release = {
+                title: github_1.context.payload.release.name || github_1.context.payload.release.tag_name,
+                url: github_1.context.payload.release.html_url,
+                commit: `${github_1.context.payload.repository?.html_url}/commit/${github_1.context.sha}`,
+            };
+            // prettier-ignore
+            return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${release.commit}|${commitId}>) for Release <${release.url}| ${release.title}>`;
+        }
+        case 'push': {
+            if (github_1.context.payload.ref.includes('tags')) {
+                const pre = 'refs/tags/';
+                const title = github_1.context.payload.ref.substring(pre.length);
+                const tag = {
+                    title,
+                    commit: github_1.context.payload.compare,
+                    url: `${github_1.context.payload.repository?.html_url}/releases/tag/${title}`,
+                };
+                // prettier-ignore
+                return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${tag.commit}|${commitId}>) for Tag <${tag.url}| ${tag.title}>`;
+            }
+            const commitMessage = github_1.context.payload.head_commit.message;
+            const headCommit = {
+                title: commitMessage.includes('\n')
+                    ? commitMessage.substring(0, commitMessage.indexOf('\n'))
+                    : commitMessage,
+                url: github_1.context.payload.head_commit.url,
+            };
+            // Normal commit push
+            return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${github_1.context.payload.compare}|${commitId}>) for Commit <${headCommit.url}| ${headCommit.title}>`;
+        }
+        case 'schedule': {
+            return `Scheduled Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}>`;
+        }
+        case 'create': {
+            if (github_1.context.payload.ref_type !== 'branch') {
+                return null;
+            }
+            const pre = 'refs/heads/';
+            const branchName = github_1.context.ref.substring(pre.length);
+            const branchUrl = `${github_1.context.payload.repository.html_url}/tree/${branchName}`;
+            return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> for Creation of Branch <${branchUrl}|${branchName}>`;
+        }
+        case 'delete': {
+            if (github_1.context.payload.ref_type !== 'branch') {
+                return null;
+            }
+            const branchName = github_1.context.payload.ref;
+            return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> for Deletion of Branch \`${branchName}\``;
+        }
+        default:
+            return null;
+    }
+};
+/**
+ * Sends message via slack
+ */
+const notify = async (status, url) => {
+    const sender = github_1.context.payload.sender;
+    const message = getMessage();
+    core_1.default.debug(JSON.stringify(github_1.context));
+    if (!message) {
+        console.log(`We don't support the [${github_1.context.eventName}] event yet.`);
+        return;
+    }
+    const attachment = {
+        author_name: sender?.login,
+        author_link: sender?.html_url,
+        author_icon: sender?.avatar_url,
+        color: jobParameters(status).color,
+        footer: `<https://github.com/${process.env.GITHUB_REPOSITORY}|${process.env.GITHUB_REPOSITORY}>`,
+        footer_icon: 'https://github.githubassets.com/favicon.ico',
+        mrkdwn_in: ['text'],
+        ts: new Date(github_1.context.payload.repository?.pushed_at).getTime().toString(),
+        text: `${message} ${jobParameters(status).text}`,
+    };
+    if (github_1.context.eventName === 'schedule') {
+        // Schedule event doesn't have a commit so we use the current time
+        attachment.ts = new Date().getTime().toString();
+    }
+    const payload = {
+        attachments: [attachment],
+    };
+    await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+    });
+};
+exports["default"] = notify;
+
+
+/***/ }),
+
 /***/ 2628:
 /***/ ((module) => {
 
@@ -10338,7 +10560,7 @@ module.exports = require("tls");
 
 /***/ }),
 
-/***/ 7310:
+/***/ 5034:
 /***/ ((module) => {
 
 "use strict";
@@ -10403,255 +10625,17 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__nccwpck_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__nccwpck_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__nccwpck_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__nccwpck_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
-var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
-(() => {
-"use strict";
-// ESM COMPAT FLAG
-__nccwpck_require__.r(__webpack_exports__);
-
-// EXTERNAL MODULE: ./node_modules/.pnpm/@actions+core@1.10.0/node_modules/@actions/core/lib/core.js
-var core = __nccwpck_require__(7954);
-var core_default = /*#__PURE__*/__nccwpck_require__.n(core);
-// EXTERNAL MODULE: ./node_modules/.pnpm/@actions+github@4.0.0/node_modules/@actions/github/lib/github.js
-var github = __nccwpck_require__(7586);
-;// CONCATENATED MODULE: ./src/notify.ts
-
-
-/**
- * Returns parameters depending on the status of the workflow
- */
-const jobParameters = (status) => {
-    return {
-        success: {
-            color: 'good',
-            text: 'succeeded',
-        },
-        failure: {
-            color: 'danger',
-            text: 'failed',
-        },
-        cancelled: {
-            color: 'warning',
-            text: 'was cancelled.',
-        },
-    }[status];
-};
-/**
- * Returns message for slack based on event type
- */
-const getMessage = () => {
-    const eventName = github.context.eventName;
-    const runUrl = `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
-    const commitId = github.context.sha.substring(0, 7);
-    switch (eventName) {
-        case 'pull_request': {
-            const pr = {
-                title: github.context.payload.pull_request.title,
-                number: github.context.payload.pull_request.number,
-                url: github.context.payload.pull_request.html_url,
-            };
-            const compareUrl = `${github.context.payload.repository.html_url}/compare/${github.context.payload.pull_request.head.ref}`;
-            // prettier-ignore
-            return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${compareUrl}|${commitId}>) for PR <${pr.url}| #${pr.number} ${pr.title}>`;
-        }
-        case 'release': {
-            const release = {
-                title: github.context.payload.release.name || github.context.payload.release.tag_name,
-                url: github.context.payload.release.html_url,
-                commit: `${github.context.payload.repository.html_url}/commit/${github.context.sha}`,
-            };
-            // prettier-ignore
-            return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${release.commit}|${commitId}>) for Release <${release.url}| ${release.title}>`;
-        }
-        case 'push': {
-            if (github.context.payload.ref.includes('tags')) {
-                const pre = 'refs/tags/';
-                const title = github.context.payload.ref.substring(pre.length);
-                const tag = {
-                    title,
-                    commit: github.context.payload.compare,
-                    url: `${github.context.payload.repository.html_url}/releases/tag/${title}`,
-                };
-                // prettier-ignore
-                return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${tag.commit}|${commitId}>) for Tag <${tag.url}| ${tag.title}>`;
-            }
-            const commitMessage = github.context.payload.head_commit.message;
-            const headCommit = {
-                title: commitMessage.includes('\n')
-                    ? commitMessage.substring(0, commitMessage.indexOf('\n'))
-                    : commitMessage,
-                url: github.context.payload.head_commit.url,
-            };
-            // Normal commit push
-            return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> (<${github.context.payload.compare}|${commitId}>) for Commit <${headCommit.url}| ${headCommit.title}>`;
-        }
-        case 'schedule': {
-            return `Scheduled Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}>`;
-        }
-        case 'create': {
-            if (github.context.payload.ref_type !== 'branch') {
-                return null;
-            }
-            const pre = 'refs/heads/';
-            const branchName = github.context.ref.substring(pre.length);
-            const branchUrl = `${github.context.payload.repository.html_url}/tree/${branchName}`;
-            return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> for Creation of Branch <${branchUrl}|${branchName}>`;
-        }
-        case 'delete': {
-            if (github.context.payload.ref_type !== 'branch') {
-                return null;
-            }
-            const branchName = github.context.payload.ref;
-            return `Workflow <${runUrl}|${process.env.GITHUB_WORKFLOW}> for Deletion of Branch \`${branchName}\``;
-        }
-        default:
-            return null;
-    }
-};
-/**
- * Sends message via slack
- */
-const notify = async (status, url) => {
-    const sender = github.context.payload.sender;
-    const message = getMessage();
-    core_default().debug(JSON.stringify(github.context));
-    if (!message) {
-        console.log(`We don't support the [${github.context.eventName}] event yet.`);
-        return;
-    }
-    const attachment = {
-        author_name: sender?.login,
-        author_link: sender?.html_url,
-        author_icon: sender?.avatar_url,
-        color: jobParameters(status).color,
-        footer: `<https://github.com/${process.env.GITHUB_REPOSITORY}|${process.env.GITHUB_REPOSITORY}>`,
-        footer_icon: 'https://github.githubassets.com/favicon.ico',
-        mrkdwn_in: ['text'],
-        ts: new Date(github.context.payload.repository.pushed_at).getTime().toString(),
-        text: `${message} ${jobParameters(status).text}`,
-    };
-    if (github.context.eventName === 'schedule') {
-        // Schedule event doesn't have a commit so we use the current time
-        attachment.ts = new Date().getTime().toString();
-    }
-    const payload = {
-        attachments: [attachment],
-    };
-    await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(payload),
-    });
-};
-/* harmony default export */ const src_notify = (notify);
-
-;// CONCATENATED MODULE: ./src/multiple-jobs.ts
-
-const getJobs = async () => {
-    const Octokit = (0,github.getOctokit)(process.env.GITHUB_TOKEN);
-    const { data } = await Octokit.actions.listJobsForWorkflowRun({
-        ...github.context.repo,
-        run_id: github.context.runId,
-    });
-    const currentJob = github.context.job;
-    return data.jobs
-        .map((a) => ({
-        name: a.name,
-        conclusion: a.conclusion,
-    }))
-        .filter((a) => a.name !== currentJob);
-};
-const getJobsStatus = async () => {
-    const jobs = await getJobs();
-    if (jobs.some((a) => ['failure', 'timed_out'].includes(a.conclusion))) {
-        return 'failure';
-    }
-    if (jobs.some((a) => a.conclusion === 'cancelled')) {
-        return 'cancelled';
-    }
-    return 'success';
-};
-
-;// CONCATENATED MODULE: ./src/index.ts
-
-
-
-async function run() {
-    try {
-        const url = process.env.SLACK_WEBHOOK_URL;
-        if (!url) {
-            throw new Error('Please set [SLACK_WEBHOOK_URL] environment variable');
-        }
-        let jobStatus = core_default().getInput('status');
-        if (!jobStatus) {
-            if (!process.env.GITHUB_TOKEN) {
-                throw new Error('Please pass in [GITHUB_TOKEN] environment variable');
-            }
-            jobStatus = await getJobsStatus();
-        }
-        else {
-            if (!['success', 'failure', 'cancelled'].includes(jobStatus)) {
-                throw new Error('Unknown job status passed in.');
-            }
-        }
-        await src_notify(jobStatus, url);
-    }
-    catch (error) {
-        if (error instanceof Error) {
-            core_default().setFailed(error.message);
-            core_default().debug(error.stack);
-        }
-    }
-}
-run();
-
-})();
-
-module.exports = __webpack_exports__;
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	var __webpack_exports__ = __nccwpck_require__(8891);
+/******/ 	module.exports = __webpack_exports__;
+/******/ 	
 /******/ })()
 ;
